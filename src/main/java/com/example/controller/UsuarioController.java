@@ -19,14 +19,12 @@ public class UsuarioController {
 
     private final UsuarioService service;
 
-    // 🔹 LISTAR
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<List<UsuarioResponse>> listar() {
         return ResponseEntity.ok(service.listar());
     }
 
-    // 🔹 CREAR
     @PostMapping("/crear")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UsuarioResponse> crear(@RequestBody RegisterRequest req) {
@@ -41,7 +39,6 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 
-    // 🔹 ACTUALIZAR
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<UsuarioResponse> actualizar(@PathVariable Long id,
@@ -50,28 +47,24 @@ public class UsuarioController {
         return ResponseEntity.ok(service.actualizar(id, usuario));
     }
 
-    // 🔹 BUSCAR
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscar/{id}")
     public ResponseEntity<UsuarioResponse> buscar(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscar(id));
     }
 
-    // 🔹 DESACTIVAR
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/desactivar/{id}")
     public ResponseEntity<UsuarioResponse> desactivar(@PathVariable Long id) {
         return ResponseEntity.ok(service.desactivar(id));
     }
 
-    // 🔹 ACTIVAR
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/activar/{id}")
     public ResponseEntity<UsuarioResponse> activar(@PathVariable Long id) {
         return ResponseEntity.ok(service.activar(id));
     }
 
-    // 🔹 ELIMINAR
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/borrar/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {

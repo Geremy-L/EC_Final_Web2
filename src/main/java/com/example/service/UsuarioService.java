@@ -20,7 +20,6 @@ public class UsuarioService {
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // 🔹 LISTAR
     public List<UsuarioResponse> listar() {
         return repository.findAll()
                 .stream()
@@ -28,7 +27,6 @@ public class UsuarioService {
                 .toList();
     }
 
-    // 🔹 BUSCAR
     public UsuarioResponse buscar(Long id) {
         return toResponse(repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado")));
@@ -52,7 +50,6 @@ public class UsuarioService {
         return toResponse(repository.save(usuario));
     }
 
-    // 🔹 ACTUALIZAR
     public UsuarioResponse actualizar(Long id, Usuario datos) {
 
         Usuario usuario = repository.findById(id)
@@ -70,18 +67,17 @@ public class UsuarioService {
             usuario.setPassword(passwordEncoder.encode(datos.getPassword()));
         }
 
-        // 🔥 ESTE BLOQUE ES EL ARREGLO REAL
+        // ESTE BLOQUE ES EL ARREGLO REAL
         if (datos.getRoles() != null) {
             usuario.setRoles(datos.getRoles());
         } else {
-            // 👇 evita que Hibernate intente meter null
+            // evita que Hibernate intente meter null
             usuario.setRoles(usuario.getRoles());
         }
 
         return toResponse(repository.save(usuario));
     }
 
-    // 🔹 DESACTIVAR
     public UsuarioResponse desactivar(Long id) {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
@@ -90,7 +86,6 @@ public class UsuarioService {
         return toResponse(repository.save(usuario));
     }
 
-    // 🔹 ACTIVAR
     public UsuarioResponse activar(Long id) {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
@@ -99,7 +94,6 @@ public class UsuarioService {
         return toResponse(repository.save(usuario));
     }
 
-    // 🔹 ELIMINAR
     public void eliminar(Long id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Usuario no encontrado");
