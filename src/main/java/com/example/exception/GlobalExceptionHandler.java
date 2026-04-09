@@ -27,8 +27,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> general(Exception ex) {
+
+        ex.printStackTrace(); // 👈 esto es lo importante
+
         return new ResponseEntity<>(
-                Map.of("error", "Error interno"),
+                Map.of(
+                        "error", "Error interno",
+                        "detalle", ex.getMessage() // 👈 ahora ves el error real
+                ),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }

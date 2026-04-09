@@ -1,11 +1,13 @@
 package com.example.controller;
 
 import com.example.dto.RegisterRequest;
+import com.example.dto.UsuarioResponse;
 import com.example.model.Rol;
 import com.example.model.Usuario;
 import com.example.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,57 +19,63 @@ public class UsuarioController {
 
     private final UsuarioService service;
 
-    // Listar usuarios
+    // 🔹 LISTAR
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
-    public ResponseEntity<List<Usuario>> listar() {
-        return new ResponseEntity<>(service.listar(), HttpStatus.OK);
+    public ResponseEntity<List<UsuarioResponse>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
-    // Mantienes este (pero no asigna roles automáticamente)
-    @PostMapping("/agregar")
-    public ResponseEntity<?> agregar(@RequestBody Usuario usuario) {
-        service.guardar(usuario);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    // ESTE es el importante (crear usuario con rol)
+    // 🔹 CREAR
     @PostMapping("/crear")
-    public ResponseEntity<?> crear(@RequestBody RegisterRequest req) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioResponse> crear(@RequestBody RegisterRequest req) {
 
-        service.crearConRol(
+        UsuarioResponse usuario = service.crear(
                 req.getNombre(),
                 req.getEmail(),
                 req.getPassword(),
-                Rol.NombreRol.valueOf(req.getRol())
+                req.getRoles() // ahora es lista
         );
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 
-    // Buscar usuario por id
+    // 🔹 ACTUALIZAR
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<UsuarioResponse> actualizar(@PathVariable Long id,
+                                                      @RequestBody Usuario usuario) {
+
+        return ResponseEntity.ok(service.actualizar(id, usuario));
+    }
+
+    // 🔹 BUSCAR
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<Usuario> buscar(@PathVariable Long id) {
-        return new ResponseEntity<>(service.buscar(id), HttpStatus.OK);
+    public ResponseEntity<UsuarioResponse> buscar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscar(id));
     }
 
-    // Desactivar
+    // 🔹 DESACTIVAR
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/desactivar/{id}")
-    public ResponseEntity<?> desactivar(@PathVariable Long id) {
-        service.desactivar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<UsuarioResponse> desactivar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.desactivar(id));
     }
 
-    // Activar
+    // 🔹 ACTIVAR
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/activar/{id}")
-    public ResponseEntity<?> activar(@PathVariable Long id) {
-        service.activar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<UsuarioResponse> activar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.activar(id));
     }
 
-    // ✔ Eliminar usuario
+    // 🔹 ELIMINAR
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/borrar/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -47,6 +47,25 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /*
+     @Bean
+     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+         http
+             .csrf(csrf -> csrf.disable())
+             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+             .authorizeHttpRequests(auth -> auth
+                 // todos deben acceder al login
+                 .requestMatchers("/api/auth/**").permitAll()
+
+                 // lo demás sí requiere autenticación
+                 .anyRequest().authenticated()
+             )
+             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+         return http.build();
+     }
+    */
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

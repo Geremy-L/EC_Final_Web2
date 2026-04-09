@@ -26,7 +26,7 @@ public class Usuario {
     private String password;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private Boolean activo = true; // b --> B, para que acepte vacío al actualizar
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

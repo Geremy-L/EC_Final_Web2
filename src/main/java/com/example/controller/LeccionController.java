@@ -4,6 +4,7 @@ import com.example.model.Leccion;
 import com.example.service.LeccionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class LeccionController {
         return new ResponseEntity<>(service.listarPorCurso(cursoId), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('DOCENTE','ADMIN')")
     @PostMapping("/agregar/{cursoId}")
     public ResponseEntity<?> agregar(@PathVariable Long cursoId, @RequestBody Leccion leccion) {
         service.agregar(cursoId, leccion);

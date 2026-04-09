@@ -1,6 +1,8 @@
 package com.example.dto;
 
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -12,5 +14,5 @@ public class UsuarioResponse {
     private String nombre;
     private String email;
     private boolean activo;
-    private Set<String> roles;
+    private List<String> roles; // Set --> List
 }

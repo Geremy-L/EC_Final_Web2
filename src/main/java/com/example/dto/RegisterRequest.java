@@ -3,6 +3,8 @@ package com.example.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class RegisterRequest {
 
@@ -18,5 +20,6 @@ public class RegisterRequest {
     private String password;
 
     // Por defecto se asigna ROLE_ALUMNO, el admin puede cambiar
-    private String rol = "ROLE_ALUMNO";
+    // private String rol = "ROLE_ALUMNO";
+    private List<String> roles;
 }

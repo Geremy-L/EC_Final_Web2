@@ -4,6 +4,7 @@ import com.example.model.Inscripcion;
 import com.example.service.InscripcionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class InscripcionController {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ALUMNO')")
     @PostMapping("/inscribir")
     public ResponseEntity<?> inscribir(@RequestParam Long alumnoId, @RequestParam Long cursoId) {
         service.inscribir(alumnoId, cursoId);
