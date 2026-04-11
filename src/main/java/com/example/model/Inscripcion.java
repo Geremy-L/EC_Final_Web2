@@ -26,11 +26,23 @@ public class Inscripcion {
     private Curso curso;
 
     @Enumerated(EnumType.STRING)
-    private EstadoInscripcion estado = EstadoInscripcion.ACTIVO;
+    @Column(nullable = false)
+    private EstadoInscripcion estado;
+    //private EstadoInscripcion estado = EstadoInscripcion.ACTIVO;
 
     private LocalDateTime fechaInscripcion = LocalDateTime.now();
 
     public enum EstadoInscripcion {
         ACTIVO, COMPLETADO, CANCELADO
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (estado == null) {
+            estado = EstadoInscripcion.ACTIVO;
+        }
+        if (fechaInscripcion == null) {
+            fechaInscripcion = LocalDateTime.now();
+        }
     }
 }

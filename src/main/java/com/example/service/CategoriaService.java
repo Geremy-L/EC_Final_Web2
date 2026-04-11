@@ -20,21 +20,38 @@ public class CategoriaService {
 
     public Categoria buscar(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
     }
 
     public Categoria agregar(Categoria categoria) {
+
+        repository.findByNombre(categoria.getNombre())
+                .ifPresent(c -> {
+                    throw new IllegalArgumentException("La categoría ya existe");
+                });
+
         return repository.save(categoria);
     }
 
     public Categoria editar(Long id, Categoria nueva) {
+
         Categoria c = buscar(id);
+
+        if (!c.getNombre().equals(nueva.getNombre())) {
+            repository.findByNombre(nueva.getNombre())
+                    .ifPresent(cat -> {
+                        throw new IllegalArgumentException("La categoría ya existe");
+                    });
+        }
+
         c.setNombre(nueva.getNombre());
         c.setDescripcion(nueva.getDescripcion());
+
         return repository.save(c);
     }
 
     public void eliminar(Long id) {
-        repository.deleteById(id);
+        Categoria c = buscar(id); // valida existencia
+        repository.delete(c);
     }
 }

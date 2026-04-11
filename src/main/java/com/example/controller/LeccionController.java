@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.LeccionResponse;
 import com.example.model.Leccion;
 import com.example.service.LeccionService;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +17,35 @@ public class LeccionController {
 
     private final LeccionService service;
 
-    @GetMapping("/curso/{cursoId}")
-    public ResponseEntity<List<Leccion>> listar(@PathVariable Long cursoId) {
-        return new ResponseEntity<>(service.listarPorCurso(cursoId), HttpStatus.OK);
+    @GetMapping("/listar")
+    public ResponseEntity<List<LeccionResponse>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
-    @PreAuthorize("hasAnyRole('DOCENTE','ADMIN')")
-    @PostMapping("/agregar/{cursoId}")
-    public ResponseEntity<?> agregar(@PathVariable Long cursoId, @RequestBody Leccion leccion) {
-        service.agregar(cursoId, leccion);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<LeccionResponse> buscar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscar(id));
+    }
+
+    @GetMapping("/curso/{cursoId}")
+    public ResponseEntity<List<LeccionResponse>> listarPorCurso(@PathVariable Long cursoId) {
+        return ResponseEntity.ok(service.listarPorCurso(cursoId));
+    }
+
+    @PostMapping("/crear")
+    public ResponseEntity<LeccionResponse> crear(@RequestBody Leccion leccion) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(leccion));
+    }
+
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<LeccionResponse> actualizar(@PathVariable Long id,
+                                                      @RequestBody Leccion leccion) {
+        return ResponseEntity.ok(service.actualizar(id, leccion));
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }

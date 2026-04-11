@@ -19,12 +19,31 @@ public class CategoriaController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<List<Categoria>> listar() {
-        return new ResponseEntity<>(service.listar(), HttpStatus.OK);
+        return ResponseEntity.ok(service.listar());
     }
 
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<Categoria> buscar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscar(id));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/agregar")
-    public ResponseEntity<?> agregar(@RequestBody Categoria c) {
-        service.agregar(c);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Categoria> agregar(@RequestBody Categoria c) {
+        Categoria nueva = service.agregar(c);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<Categoria> editar(@PathVariable Long id, @RequestBody Categoria c) {
+        return ResponseEntity.ok(service.editar(id, c));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.CursoResponse;
 import com.example.model.Curso;
 import com.example.service.CursoService;
 import lombok.RequiredArgsConstructor;
@@ -17,33 +18,44 @@ public class CursoController {
     private final CursoService service;
 
     @GetMapping("/listar")
-    public ResponseEntity<List<Curso>> listar() {
-        return new ResponseEntity<>(service.listar(), HttpStatus.OK);
+    public ResponseEntity<List<CursoResponse>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscar(@PathVariable Long id) {
-        return new ResponseEntity<>(service.buscar(id), HttpStatus.OK);
+    public ResponseEntity<CursoResponse> buscar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscar(id));
     }
 
-    @PreAuthorize("hasAnyRole('DOCENTE','ADMIN')")
-    @PostMapping("/agregar")
-    public ResponseEntity<?> agregar(@RequestBody Curso curso) {
-        service.agregar(curso);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PreAuthorize("hasRole('ADMIN', 'DOCENTE')")
+    @PostMapping("/crear")
+    public ResponseEntity<CursoResponse> crear(@RequestBody Curso curso) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(curso));
     }
 
-    @PreAuthorize("hasAnyRole('DOCENTE','ADMIN')")
-    @PutMapping("/editar/{id}")
-    public ResponseEntity<?> editar(@PathVariable Long id, @RequestBody Curso curso) {
-        service.editar(id, curso);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/actualizar/{id}")
+    @PreAuthorize("hasRole('ADMIN', 'DOCENTE')")
+    public ResponseEntity<CursoResponse> actualizar(@PathVariable Long id,
+                                                    @RequestBody Curso curso) {
+        return ResponseEntity.ok(service.actualizar(id, curso));
     }
 
-    @PreAuthorize("hasAnyRole('DOCENTE','ADMIN')")
-    @DeleteMapping("/borrar/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    @DeleteMapping("/eliminar/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCENTE')")
+    @PutMapping("/desactivar/{id}")
+    public ResponseEntity<CursoResponse> desactivar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.desactivar(id));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCENTE')")
+    @PutMapping("/activar/{id}")
+    public ResponseEntity<CursoResponse> activar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.activar(id));
     }
 }

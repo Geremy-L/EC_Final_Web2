@@ -20,6 +20,6 @@ public class RegisterRequest {
     private String password;
 
     // Por defecto se asigna ROLE_ALUMNO, el admin puede cambiar
-    // private String rol = "ROLE_ALUMNO";
+    // private String rol = "ROLE_ALUMNO"; ya fue
     private List<String> roles;
 }

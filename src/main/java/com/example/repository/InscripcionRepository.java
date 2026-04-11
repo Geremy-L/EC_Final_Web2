@@ -15,4 +15,6 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
     List<Inscripcion> findByAlumnoId(Long alumnoId);
 
     List<Inscripcion> findByCursoId(Long cursoId);
+
+    boolean existsByAlumnoIdAndCursoId(Long alumnoId, Long cursoId);
 }

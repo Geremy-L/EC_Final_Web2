@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UsuarioResponse {
     private Long id;
     private String nombre;

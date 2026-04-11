@@ -30,15 +30,15 @@ public class Usuario {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "usuario_roles",
-        joinColumns = @JoinColumn(name = "usuario_id"),
-        inverseJoinColumns = @JoinColumn(name = "rol_id")
+            name = "usuario_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
     private Set<Rol> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "docente", cascade = CascadeType.ALL)
     private List<Curso> cursosCreados = new ArrayList<>();
 
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
-    private List<Inscripcion> inscripciones = new ArrayList<>();
+    private List<Inscripcion> inscripciones = new ArrayList<>();*/
 }

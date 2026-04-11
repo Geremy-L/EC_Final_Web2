@@ -23,7 +23,9 @@ public class Curso {
     @Column(length = 1000)
     private String descripcion;
 
-    private boolean activo = true;
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean activo = true;
 
     private LocalDateTime creadoEn = LocalDateTime.now();
 
@@ -32,9 +34,10 @@ public class Curso {
     private Usuario docente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "categoria_id", nullable = false) // ← FIX
     private Categoria categoria;
 
+    /*
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Leccion> lecciones = new ArrayList<>();
 
@@ -43,4 +46,10 @@ public class Curso {
 
     @OneToOne(mappedBy = "curso", cascade = CascadeType.ALL)
     private Certificado certificado;
+    */
+
+    @PrePersist
+    protected void onCreate() {
+        creadoEn = LocalDateTime.now();
+    }
 }

@@ -67,11 +67,9 @@ public class UsuarioService {
             usuario.setPassword(passwordEncoder.encode(datos.getPassword()));
         }
 
-        // ESTE BLOQUE ES EL ARREGLO REAL
         if (datos.getRoles() != null) {
             usuario.setRoles(datos.getRoles());
         } else {
-            // evita que Hibernate intente meter null
             usuario.setRoles(usuario.getRoles());
         }
 
